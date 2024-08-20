@@ -1,0 +1,4 @@
+# Setup of a template project using Docker, Nextjs and Strapi
+This project is for a quick and effective way to setup a new project
+
+npx create-strapi-app@latest strapi inside /admin, make sure do use manual config and choose postgres as your database

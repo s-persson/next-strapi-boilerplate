@@ -1,0 +1,43 @@
+services:
+    strapi:
+        container_name: strapi
+        build: ./admin
+        env_file: .env
+        restart: unless-stopped
+        environment:
+            - DATABASE_CLIENT=postgres
+            - DATABASE_HOST=postgres-server
+            - DATABASE_PORT=5432
+            - DATABASE_NAME=${DATABASE_NAME}
+            - DATABASE_USERNAME=${DATABASE_USERNAME}
+            - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+            - ADMIN_JWT_SECRET=${ADMIN_JWT_SECRET}
+            - JWT_SECRET=${JWT_SECRET}
+            - APP_KEYS=${APP_KEYS}
+            - NODE_ENV=${NODE_ENV}
+        ports:
+            - "1337:1337"
+        networks:
+            - shared
+        depends_on:
+            - postgres-server
+
+    next:
+        container_name: next
+        build: ./frontend
+        env_file: .env
+        restart: unless-stopped
+        environment:
+            - NODE_ENV=${NODE_ENV}
+            - API_URL=${API_URL}
+        ports:
+            - "3000:3000"
+        networks:
+            - shared
+        depends_on:
+            - postgres-server
+            - strapi
+
+networks:
+    shared:
+        external: true

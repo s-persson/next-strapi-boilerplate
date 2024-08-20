@@ -1,0 +1,7 @@
+admin/
+!admin/.dockerignore
+!admin/Dockerfile
+frontend/
+!frontend/.dockerignore
+!frontend/.Dockerfile
+.env
