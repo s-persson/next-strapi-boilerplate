@@ -1,6 +1,8 @@
 strapi/.tmp/
 strapi/.cache/
-strapi/.git/
+strapi/.git
+strapi/.gitignore/
 strapi/build/
 strapi/node_modules/
 strapi/data/
+Dockerfile

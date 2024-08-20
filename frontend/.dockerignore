@@ -1,2 +1,6 @@
 next/.git/
+next/.gitignore
 next/node_modules/
+next/package-lock.json
+next/.cache
+Dockerfile
