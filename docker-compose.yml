@@ -2,7 +2,6 @@ services:
     strapi:
         container_name: strapi
         build: ./admin
-        env_file: .env
         restart: unless-stopped
         environment:
             - DATABASE_CLIENT=postgres
@@ -15,17 +14,15 @@ services:
             - JWT_SECRET=${JWT_SECRET}
             - APP_KEYS=${APP_KEYS}
             - NODE_ENV=${NODE_ENV}
+            - API_TOKEN_SALT=${API_TOKEN_SALT}
         ports:
             - "1337:1337"
         networks:
             - shared
-        depends_on:
-            - postgres-server
 
     next:
         container_name: next
         build: ./frontend
-        env_file: .env
         restart: unless-stopped
         environment:
             - NODE_ENV=${NODE_ENV}
@@ -34,9 +31,6 @@ services:
             - "3000:3000"
         networks:
             - shared
-        depends_on:
-            - postgres-server
-            - strapi
 
 networks:
     shared:

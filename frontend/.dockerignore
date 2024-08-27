@@ -1,6 +1,9 @@
-next/.git/
-next/.gitignore
-next/node_modules/
-next/package-lock.json
-next/.cache
+next/.git
+next/node_modules
+next/npm-debug.log
+next/README.md
+next/.next
+!next/.next/static
+!next/.next/standalone
+.dockerignore
 Dockerfile

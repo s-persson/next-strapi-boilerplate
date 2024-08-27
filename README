@@ -2,3 +2,5 @@
 This project is for a quick and effective way to setup a new project
 
 npx create-strapi-app@latest strapi inside /admin, make sure do use manual config and choose postgres as your database
+
+Make nextjs project export standalone by changing next/next.config.mjs to output: "standalone"

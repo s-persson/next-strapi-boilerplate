@@ -1,44 +1,23 @@
-FROM node:18-alpine AS base
+# Use an official Node.js runtime as a base image
+FROM node:18-alpine
 
-FROM base AS deps
-
-RUN apk add --no-cache libc6-compat
+# Set the working directory inside the container
 WORKDIR /app
 
-COPY next/package.json ./
+# Copy package.json and package-lock.json to the working directory
+COPY next/package*.json ./
 
-RUN npm update && npm install
+# Install dependencies
+RUN npm ci
 
-# If you want yarn update and  install uncomment the bellow
+# Copy the rest of the application code to the working directory
+COPY next .
 
-# RUN yarn install &&  yarn upgrade
-
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/next/node_modules ./node_modules
-COPY . .
-
+# Build the Next.js app for production
 RUN npm run build
 
-FROM base AS runner
-WORKDIR /app
-
-ENV NODE_ENV development
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-COPY --from=builder /app/next/public ./public
-
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-COPY --from=builder --chown=nextjs:nodejs /app/next/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/next/.next/static ./.next/static
-
-USER nextjs
-
+# Expose the port that the Next.js app will run on
 EXPOSE 3000
 
-ENV PORT 3000
-
-CMD ["npm", "dev"]
+# Start the Next.js app in production mode
+CMD ["node", ".next/standalone/server.js"]
