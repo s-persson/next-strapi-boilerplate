@@ -16,6 +16,10 @@ COPY next .
 # Build the Next.js app for production
 RUN npm run build
 
+# Copy the standalone build and static files
+RUN cp -r .next/static .next/standalone/.next/static
+RUN cp -r public .next/standalone/public
+
 # Expose the port that the Next.js app will run on
 EXPOSE 3000
 
