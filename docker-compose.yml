@@ -3,6 +3,7 @@ services:
         container_name: strapi
         build: ./admin
         restart: unless-stopped
+        env_file: .env
         environment:
             - DATABASE_CLIENT=postgres
             - DATABASE_HOST=postgres-server
@@ -15,6 +16,9 @@ services:
             - APP_KEYS=${APP_KEYS}
             - NODE_ENV=${NODE_ENV}
             - API_TOKEN_SALT=${API_TOKEN_SALT}
+            - ADMIN_EMAIL=${ADMIN_EMAIL}
+            - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+            - ADMIN_USERNAME=${ADMIN_USERNAME}
         ports:
             - "1337:1337"
         networks:
