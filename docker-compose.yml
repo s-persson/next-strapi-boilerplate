@@ -3,7 +3,6 @@ services:
         container_name: strapi
         build: ./admin
         restart: unless-stopped
-        env_file: .env
         environment:
             - DATABASE_CLIENT=postgres
             - DATABASE_HOST=postgres-server
@@ -19,22 +18,51 @@ services:
             - ADMIN_EMAIL=${ADMIN_EMAIL}
             - ADMIN_PASSWORD=${ADMIN_PASSWORD}
             - ADMIN_USERNAME=${ADMIN_USERNAME}
+        volumes:
+            - strapi_config:/opt/app/config
+            - strapi_src:/opt/app/src
+            - strapi_uploads:/opt/app/public/uploads
         ports:
             - "1337:1337"
         networks:
             - shared
 
-    next:
-        container_name: next
-        build: ./frontend
-        restart: unless-stopped
-        environment:
-            - NODE_ENV=${NODE_ENV}
-            - API_URL=${API_URL}
-        ports:
-            - "3000:3000"
+    # next:
+    #     container_name: next
+    #     build: ./frontend
+    #     restart: unless-stopped
+    #     environment:
+    #         - NODE_ENV=${NODE_ENV}
+    #         - API_URL=${API_URL}
+    #     ports:
+    #         - "3000:3000"
+    #     networks:
+    #         - shared
+
+    backup:
+        container_name: backup
+        build: 
+            context: ./backup
+            dockerfile: Dockerfile
+        volumes: 
+            - /var/run/docker.sock:/var/run/docker.sock
+            - strapi_config:/mnt/strapi_config:ro
+            - strapi_src:/mnt/strapi_src:ro
+            - strapi_uploads:/mnt/strapi_uploads:ro
+            - postgres-server_backup:/mnt/pg_backup:rw
+            - ./backup/script.sh:/usr/local/bin/backup.sh:ro
+        profiles: ["backup"]
+        env_file:
+            - .env
         networks:
             - shared
+
+volumes:
+  strapi_config:
+  strapi_src:
+  strapi_uploads:
+  postgres-server_backup:
+
 
 networks:
     shared:
