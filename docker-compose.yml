@@ -41,17 +41,14 @@ services:
 
     backup:
         container_name: backup
-        build: 
-            context: ./backup
-            dockerfile: Dockerfile
+        build: ./backup
         volumes: 
             - /var/run/docker.sock:/var/run/docker.sock
             - strapi_config:/mnt/strapi_config:ro
             - strapi_src:/mnt/strapi_src:ro
             - strapi_uploads:/mnt/strapi_uploads:ro
-            - postgres-server_backup:/mnt/pg_backup:rw
+            - backups:/mnt/backups:rw
             - ./backup/script.sh:/usr/local/bin/backup.sh:ro
-        profiles: ["backup"]
         env_file:
             - .env
         networks:
@@ -61,7 +58,7 @@ volumes:
   strapi_config:
   strapi_src:
   strapi_uploads:
-  postgres-server_backup:
+  backups:
 
 
 networks:
