@@ -48,11 +48,28 @@ services:
             - strapi_src:/mnt/strapi_src:ro
             - strapi_uploads:/mnt/strapi_uploads:ro
             - backups:/mnt/backups:rw
-            - ./backup/script.sh:/usr/local/bin/backup.sh:ro
+            - ./backup/script.sh:/usr/local/bin/script.sh:ro
         env_file:
             - .env
         networks:
             - shared
+
+    restore:
+        container_name: restore
+        build: ./restore
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - strapi_config:/mnt/strapi_config:rw
+            - strapi_src:/mnt/strapi_src:rw
+            - strapi_uploads:/mnt/strapi_uploads:rw
+            - backups:/mnt/backups:ro
+            - ./restore/restore.sh:/usr/local/bin/restore.sh:ro
+        networks:
+            - shared
+        environment:
+            - RESTORE_PATH
+        env_file:
+            - .env
 
 volumes:
   strapi_config:
