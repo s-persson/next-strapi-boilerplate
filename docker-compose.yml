@@ -64,6 +64,7 @@ services:
             - strapi_uploads:/mnt/strapi_uploads:rw
             - backups:/mnt/backups:ro
             - ./restore/restore.sh:/usr/local/bin/restore.sh:ro
+            - /home/simon/backups:/host_backups:ro
         networks:
             - shared
         environment:
