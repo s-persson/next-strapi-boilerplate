@@ -2,8 +2,8 @@ FROM alpine:latest
 
 RUN apk add --no-cache bash coreutils docker-cli postgresql-client
 
-COPY script.sh /usr/local/bin/script.sh
-RUN chmod +x /usr/local/bin/script.sh
+COPY backup.sh /usr/local/bin/backup.sh
+RUN chmod +x /usr/local/bin/backup.sh
 
 WORKDIR /app
-CMD ["script.sh"]
+CMD ["backup.sh"]

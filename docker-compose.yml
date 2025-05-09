@@ -48,7 +48,7 @@ services:
             - strapi_src:/mnt/strapi_src:ro
             - strapi_uploads:/mnt/strapi_uploads:ro
             - backups:/mnt/backups:rw
-            - ./backup/script.sh:/usr/local/bin/script.sh:ro
+            - ./backup/backup.sh:/usr/local/bin/backup.sh:ro
         env_file:
             - .env
         networks:
