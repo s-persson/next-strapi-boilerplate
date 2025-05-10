@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-RUN apk add --no-cache bash coreutils docker-cli postgresql-client
+RUN apk add --no-cache bash coreutils docker-cli postgresql-client rsync
 
 COPY backup.sh /usr/local/bin/backup.sh
 RUN chmod +x /usr/local/bin/backup.sh
