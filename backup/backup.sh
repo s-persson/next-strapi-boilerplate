@@ -12,6 +12,10 @@ rsync -r /mnt/strapi_src "$BACKUP_DIR/src"
 rsync -r /mnt/strapi_uploads "$BACKUP_DIR/uploads"
 
 echo "Rsyncing backup to hetzner storage box"
-rsync -avz -e "ssh -p${REMOTE_SSH_PORT:-22}" "$BACKUP_DIR/" "$REMOTE_STORAGE:$REMOTE_STORAGE_BACKUP_PATH/$DATABASE_NAME/$TIMESTAMP/"
+rsync -avz \
+  -e "ssh -p${REMOTE_SSH_PORT:-22}" \
+  --rsync-path="mkdir -p $REMOTE_STORAGE_BACKUP_PATH/$DATABASE_NAME/$TIMESTAMP && rsync" \
+  "$BACKUP_DIR/" \
+  "$REMOTE_STORAGE:$REMOTE_STORAGE_BACKUP_PATH/$DATABASE_NAME/$TIMESTAMP/"
 
 echo "✅ Backup completed successfully!"

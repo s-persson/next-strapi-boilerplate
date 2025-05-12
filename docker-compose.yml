@@ -49,10 +49,14 @@ services:
             - strapi_uploads:/mnt/strapi_uploads:ro
             - backups:/mnt/backups:rw
             - ./backup/backup.sh:/usr/local/bin/backup.sh:ro
+            - $SSH_AUTH_SOCK:/ssh-agent
+            - ~/.ssh/known_hosts:/root/.ssh/known_hosts:ro
         env_file:
             - .env
         networks:
             - shared
+        environment:
+            SSH_AUTH_SOCK: /ssh-agent
 
     restore:
         container_name: restore
@@ -63,7 +67,7 @@ services:
             - strapi_src:/mnt/strapi_src:rw
             - strapi_uploads:/mnt/strapi_uploads:rw
             - backups:/mnt/backups:ro
-            - /home/simon/backups:/host_backups:ro
+            - ${HOST_BACKUP_PATH}:/host_backups:ro
         networks:
             - shared
         environment:
