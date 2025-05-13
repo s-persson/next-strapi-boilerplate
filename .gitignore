@@ -1,7 +1,6 @@
 admin/strapi
 !admin/.dockerignore
 !admin/Dockerfile
-frontend/next
 !frontend/.dockerignore
 !frontend/.Dockerfile
 .env

@@ -27,17 +27,17 @@ services:
         networks:
             - shared
 
-    # next:
-    #     container_name: next
-    #     build: ./frontend
-    #     restart: unless-stopped
-    #     environment:
-    #         - NODE_ENV=${NODE_ENV}
-    #         - API_URL=${API_URL}
-    #     ports:
-    #         - "3000:3000"
-    #     networks:
-    #         - shared
+    next:
+        container_name: next
+        build: ./frontend
+        restart: unless-stopped
+        environment:
+            - NODE_ENV=${NODE_ENV}
+            - API_URL=${API_URL}
+        ports:
+            - "3000:3000"
+        networks:
+            - shared
 
     backup:
         container_name: backup
