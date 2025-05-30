@@ -1,4 +1,12 @@
 #!/bin/bash
+CONTAINERS=("strapi" "postgres-server")
+for c in "${CONTAINERS[@]}"; do
+  if ! docker ps --format '{{.Names}}' | grep -q "^$c$"; then
+  echo "Container $c is not running, stopping backup process"
+  exit 1
+fi
+done
+
 TIMESTAMP=$(date +"%Y-%m-%d")
 BACKUP_DIR="/mnt/backups/$DATABASE_NAME $TIMESTAMP"  
 mkdir -p "$BACKUP_DIR"

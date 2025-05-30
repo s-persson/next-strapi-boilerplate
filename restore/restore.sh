@@ -4,6 +4,14 @@ if [ -z "$RESTORE_PATH" ]; then
   exit 1
 fi
 
+CONTAINERS=("strapi" "postgres-server")
+for c in "${CONTAINERS[@]}"; do
+  if ! docker ps --format '{{.Names}}' | grep -q "^$c$"; then
+  echo "Container $c is not running, stopping backup process"
+  exit 1
+fi
+done
+
 echo "Stopping all connections"
 PGPASSWORD="$DATABASE_PASSWORD" psql -h postgres-server -U "$DATABASE_USERNAME" -d postgres -c "
 SELECT pg_terminate_backend(pg_stat_activity.pid)
