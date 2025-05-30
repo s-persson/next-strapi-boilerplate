@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 TIMESTAMP=$(date +"%Y-%m-%d")
 BACKUP_DIR="/mnt/backups/$DATABASE_NAME $TIMESTAMP"  
 mkdir -p "$BACKUP_DIR"
@@ -18,4 +18,4 @@ rsync -avz \
   "$BACKUP_DIR/" \
   "$REMOTE_STORAGE:$REMOTE_STORAGE_BACKUP_PATH/$DATABASE_NAME/$TIMESTAMP/"
 
-echo "✅ Backup completed successfully!"
+echo "Backup completed successfully"

@@ -1,10 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 if [ -z "$RESTORE_PATH" ]; then
-  echo "❌ RESTORE_PATH not set"
+  echo "RESTORE_PATH not set"
   exit 1
 fi
-echo "🔍 Before rsync:"
-ls -l /mnt/strapi_src/
 
 echo "Stopping all connections"
 PGPASSWORD="$DATABASE_PASSWORD" psql -h postgres-server -U "$DATABASE_USERNAME" -d postgres -c "
@@ -18,18 +16,15 @@ echo "Removing and recreating database"
 PGPASSWORD="$DATABASE_PASSWORD" psql -h postgres-server -U "$DATABASE_USERNAME" -d postgres -c "DROP DATABASE IF EXISTS \"$DATABASE_NAME\";"
 PGPASSWORD="$DATABASE_PASSWORD" psql -h postgres-server -U "$DATABASE_USERNAME" -d postgres -c "CREATE DATABASE \"$DATABASE_NAME\";"
 
-echo "🔁 Restoring from $RESTORE_PATH"
+echo "Restoring from $RESTORE_PATH"
   
 # Restore PostgreSQL database
 PGPASSWORD="$DATABASE_PASSWORD" pg_restore -h postgres-server -p 5432 -U "$DATABASE_USERNAME" -d "$DATABASE_NAME" -v "$RESTORE_PATH/postgres.dump" --if-exists -c
 
 # Restore Strapi files
-echo "🔁 Restoring Strapi files..."
+echo "Restoring Strapi files"
 rsync -a "$RESTORE_PATH/config/" /mnt/strapi_config/
 rsync -a "$RESTORE_PATH/src/" /mnt/strapi_src/
 rsync -a "$RESTORE_PATH/uploads/" /mnt/strapi_uploads/
 
-echo "🔍 After rsync:"
-ls -l /mnt/strapi_src/
-
-echo "✅ Restore completed!"
+echo "Restore completed"
