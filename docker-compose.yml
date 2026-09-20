@@ -1,12 +1,12 @@
 services:
     strapi:
-        container_name: strapi
+        container_name: ${STRAPI_CONTAINER_NAME}
         build: ./admin
         restart: unless-stopped
         environment:
             - DATABASE_CLIENT=postgres
-            - DATABASE_HOST=postgres-server
-            - DATABASE_PORT=5432
+            - DATABASE_HOST=${POSTGRES_HOST}
+            - DATABASE_PORT=${POSTGRES_PORT}
             - DATABASE_NAME=${DATABASE_NAME}
             - DATABASE_USERNAME=${DATABASE_USERNAME}
             - DATABASE_PASSWORD=${DATABASE_PASSWORD}
@@ -15,73 +15,72 @@ services:
             - APP_KEYS=${APP_KEYS}
             - NODE_ENV=${NODE_ENV}
             - API_TOKEN_SALT=${API_TOKEN_SALT}
+            - TRANSFER_TOKEN_SALT=${TRANSFER_TOKEN_SALT}
+            - ENCRYPTION_KEY=${ENCRYPTION_KEY}
             - ADMIN_EMAIL=${ADMIN_EMAIL}
             - ADMIN_PASSWORD=${ADMIN_PASSWORD}
             - ADMIN_USERNAME=${ADMIN_USERNAME}
         volumes:
             - strapi_config:/opt/app/config
             - strapi_src:/opt/app/src
-            - strapi_uploads:/opt/app/public/uploads
+            - strapi_public:/opt/app/public
+
         ports:
-            - "1337:1337"
+            - "${STRAPI_PORT}:1337"
         networks:
-            - shared
+            - shared-net
 
     next:
-        container_name: next
+        container_name: ${NEXT_CONTAINER_NAME}
         build: ./frontend
         restart: unless-stopped
         environment:
             - NODE_ENV=${NODE_ENV}
             - API_URL=${API_URL}
         ports:
-            - "3000:3000"
+            - "${NEXT_PORT}:3000"
         networks:
-            - shared
+            - shared-net
 
-    backup:
-        container_name: backup
-        build: ./backup
-        volumes: 
-            - /var/run/docker.sock:/var/run/docker.sock
-            - strapi_config:/mnt/strapi_config:ro
-            - strapi_src:/mnt/strapi_src:ro
-            - strapi_uploads:/mnt/strapi_uploads:ro
-            - backups:/mnt/backups:rw
-            - ./backup/backup.sh:/usr/local/bin/backup.sh:ro
-            - $SSH_AUTH_SOCK:/ssh-agent
-            - ~/.ssh/known_hosts:/root/.ssh/known_hosts:ro
-        env_file:
-            - .env
-        networks:
-            - shared
-        environment:
-            SSH_AUTH_SOCK: /ssh-agent
+    # backup:
+    #     container_name: backup
+    #     build: ./backup
+    #     volumes:
+    #         - /var/run/docker.sock:/var/run/docker.sock
+    #         - ./admin/strapi/config:/mnt/strapi_config:ro
+    #         - ./admin/strapi/src:/mnt/strapi_src:ro
+    #         - strapi_public:/mnt/strapi_public:ro
+    #         - backups:/mnt/backups:rw
+    #         - ./backup/backup.sh:/usr/local/bin/backup.sh:ro
+    #         - ~/.ssh/known_hosts:/root/.ssh/known_hosts:ro
+    #     env_file:
+    #         - .env
+    #     networks:
+    #         - shared-net
 
-    restore:
-        container_name: restore
-        build: ./restore
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-            - strapi_config:/mnt/strapi_config:rw
-            - strapi_src:/mnt/strapi_src:rw
-            - strapi_uploads:/mnt/strapi_uploads:rw
-            - backups:/mnt/backups:ro
-            - ${HOST_BACKUP_PATH}:/host_backups:ro
-        networks:
-            - shared
-        environment:
-            - RESTORE_PATH
-        env_file:
-            - .env
+    # restore:
+    #     container_name: restore
+    #     build: ./restore
+    #     volumes:
+    #         - /var/run/docker.sock:/var/run/docker.sock
+    #         - ./admin/strapi/config:/mnt/strapi_config:rw
+    #         - ./admin/strapi/src:/mnt/strapi_src:rw
+    #         - strapi_public:/mnt/strapi_public:rw
+    #         - backups:/mnt/backups:ro
+    #         - ${HOST_BACKUP_PATH}:/host_backups:ro
+    #     networks:
+    #         - shared-net
+    #     environment:
+    #         - RESTORE_PATH
+    #     env_file:
+    #         - .env
 
 volumes:
-  strapi_config:
-  strapi_src:
-  strapi_uploads:
-  backups:
-
+    strapi_config:
+    strapi_src:
+    strapi_public:
+    #backups:
 
 networks:
-    shared:
+    shared-net:
         external: true

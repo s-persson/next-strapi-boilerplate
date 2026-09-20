@@ -14,10 +14,10 @@ mkdir -p "$BACKUP_DIR"
 # Make pg_dump
 PGPASSWORD="$DATABASE_PASSWORD" pg_dump -h postgres-server -p 5432 -U "$DATABASE_USERNAME" -d "$DATABASE_NAME" -F c -b -v -f "$BACKUP_DIR/postgres.dump"
 
-# Copy Strapi config, src, and uploads
+# Copy Strapi config, src, and public assets
 rsync -r /mnt/strapi_config "$BACKUP_DIR/config"
 rsync -r /mnt/strapi_src "$BACKUP_DIR/src"
-rsync -r /mnt/strapi_uploads "$BACKUP_DIR/uploads"
+rsync -r /mnt/strapi_public "$BACKUP_DIR/public"
 
 echo "Rsyncing backup to hetzner storage box"
 rsync -avz \

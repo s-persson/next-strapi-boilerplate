@@ -33,6 +33,6 @@ PGPASSWORD="$DATABASE_PASSWORD" pg_restore -h postgres-server -p 5432 -U "$DATAB
 echo "Restoring Strapi files"
 rsync -a "$RESTORE_PATH/config/" /mnt/strapi_config/
 rsync -a "$RESTORE_PATH/src/" /mnt/strapi_src/
-rsync -a "$RESTORE_PATH/uploads/" /mnt/strapi_uploads/
+rsync -a "$RESTORE_PATH/public/" /mnt/strapi_public/
 
 echo "Restore completed"
